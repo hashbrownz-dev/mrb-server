@@ -1,15 +1,14 @@
-import { Schema, model } from 'mongoose'
-import Recipe from './recipe.js';
+import { Schema, model } from 'mongoose';
+import { recipeSchema } from './recipe.js';
+import { commentSchema } from './comment.js';
 
-const userSchema = new Schema({
+export const userSchema = new Schema({
     name:String,
     email:String,
     password:String,
     createdAt: { type: Date, default: Date.now() },
-    comments: [ String ],
-    recipes: [ String ]
+    comments: [ { type : Schema.Types.ObjectId, ref : 'comment' } ],
+    recipes: [ { type : Schema.Types.ObjectId, ref : 'recipe' } ]
 });
 
-const User = model('user', userSchema);
-
-export default User;
+export const User = model('user', userSchema);

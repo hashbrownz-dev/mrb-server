@@ -1,12 +1,9 @@
 import { Schema, model, isObjectIdOrHexString } from 'mongoose';
-import User from '../models/user.js';
 
-const commentSchema = new Schema({
+export const commentSchema = new Schema({
     message: String,
-    author: String,
     recipe: String,
+    author: { type : Schema.Types.ObjectId, ref : 'user' },
 }, {timestamps : true})
 
-const Comment = model('comment', commentSchema);
-
-export default Comment;
+export const Comment = model('comment', commentSchema);

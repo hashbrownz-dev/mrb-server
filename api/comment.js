@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
-import User from "../models/user.js";
-import Recipe from "../models/recipe.js";
-import Comment from "../models/comment.js";
+import { User } from "../models/user.js";
+import { Recipe } from "../models/recipe.js";
+import { Comment } from "../models/comment.js";
 
 // INDEX
 // NEW

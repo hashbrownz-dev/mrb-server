@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import Recipe from "../models/recipe.js";
-import User from "../models/user.js";
+import { Recipe } from "../models/recipe.js";
+import { User } from "../models/user.js";
 
 // INDEX
 export const getRecipes = (req, res) => {
