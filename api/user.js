@@ -1,46 +1,61 @@
 import mongoose from "mongoose";
 import { User } from "../models/user.js";
-
-// INDEX
-// NEW
-// DELETE
-// UPDATE
-export const updateUser = async (req, res) => {
-    // Parse Incoming Data
-    // Get and update user
-    // return json?
-}
+import bcrypt from "bcrypt";
 
 // CREATE
-export const createUser = async (req, res) => {
+export const registerUser = async (req, res) => {
     const { name, email, password } = req.body;
-    const createdUser = new User( { name, email, password } );
+    // const createdUser = new User( { name, email, password } );
     try{
-        await createdUser.save();
-        res.status(201).json(createdUser);
+        // Check if e-mail is already in use
+        let userExists = await User.findOne({email});
+        if(userExists){
+            res.status(401).json({ message : 'E-mail address is already in use.' });
+            return;
+        }
+
+        // Encrypt password
+        bcrypt.hash(password, 10, (err, hash) => {
+            if(err) throw new Error("Internal Server Error");
+
+            // Create a new User
+            User.create({name, email, password : hash})
+                .then( (user) => {
+                    res.status(200).json(user);
+                })
+                .catch( (error) => {
+                    res.status(401).json(error.message)
+                })
+        })
     }catch(e){
         console.error(e);
     }
 }
 
-// EDIT
-export const editUser = async (req, res) => {
-    const { id } = req.params;
-    try{
-        const user = await User.findById(id);
-        res.json(user);
-    }catch(e){
-        console.error(e);
-    }
-}
+// LOG IN
 
-// SHOW
-export const showUser = async (req, res) => {
-    const { id } = req.params;
-    try{
-        const user = await User.findById(id).populate('recipes');
-        res.json(user);
-    }catch(e){
-        console.error(e);
+export const loginUser = async (req, res) => {
+    // This will be a post request... and within our body their should be an email and password
+    const { email, password } = req.body;
+    try {
+        // Check if the user exists
+        const user = await User.findOne({email});
+        if(!user){
+            return res.status(401).json({message:"The e-mail address or password is invalid"});
+        }
+        // Compare passwords
+        bcrypt.compare(password, user.password, (err, result) => {
+            if(err){
+                return res.json(err);
+            }
+            if(!result){
+                return res.status(401).json({message:"The e-mail address or password is invalid"})
+            }
+            // Return a valid JWT to the client.
+            // Save this JWT to localStorage.
+            return res.status(200).json({result});
+        })
+    } catch(e) {
+        res.status(401).json(e.message);
     }
 }

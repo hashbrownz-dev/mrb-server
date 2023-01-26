@@ -1,15 +1,15 @@
 import { Router } from "express";
-import { createUser, showUser, editUser } from "../api/user.js";
+import { registerUser, loginUser } from "../api/user.js";
 
 const router = Router();
 
-// CREATE
-router.post('/', createUser);
+// Register (CREATE)
+router.post('/register', registerUser);
 
-// EDIT
-router.get('/:id/edit', editUser);
+// SIGN IN ()
+router.post('/login', loginUser);
 
 // SHOW
-router.get('/:id', showUser);
+// router.get('/:id', showUser);
 
 export default router;
