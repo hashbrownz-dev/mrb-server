@@ -38,7 +38,7 @@ export const editUser = async (req, res) => {
 export const showUser = async (req, res) => {
     const { id } = req.params;
     try{
-        const user = await User.findById(id);
+        const user = await User.findById(id).populate('recipes');
         res.json(user);
     }catch(e){
         console.error(e);
