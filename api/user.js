@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import { User } from "../models/user.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 // CREATE
 export const registerUser = async (req, res) => {
@@ -52,10 +53,24 @@ export const loginUser = async (req, res) => {
                 return res.status(401).json({message:"The e-mail address or password is invalid"})
             }
             // Return a valid JWT to the client.
-            // Save this JWT to localStorage.
-            return res.status(200).json({result});
+            // Save this JWT to localStorage (this would take place on client side)
+            const accessToken = jwt.sign({ id : user._id }, process.env.API_SECRET, {expiresIn:'24h'})
+            return res.status(200).json({
+                user,
+                accessToken
+            });
         })
     } catch(e) {
         res.status(401).json(e.message);
     }
+}
+
+// SHOW RECIPES
+
+export const showUserRecipes = async ( req, res ) => {
+    console.log(req.user);
+    if(!req.user){
+        res.status(403).json({message:'invalid access token'})
+    }
+    res.status(200).json(req.user);
 }
