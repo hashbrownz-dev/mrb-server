@@ -4,16 +4,13 @@ import { User } from "../models/user.js";
 
 // INDEX
 export const getRecipes = async (req, res) => {
-    console.log('Getting Recipes')
     const recipes = await Recipe.find({});
     res.status(201).json(recipes);
 }
 
 export const getAllUserRecipes = async (req, res) => {
-    console.log('Getting User Recipes')
     try {
         const { user } = req.params;
-        console.log(user);
         const recipes = await Recipe.find({'author':user});
         res.status(201).json(recipes);
     } catch (error) {
@@ -28,11 +25,11 @@ export const newRecipe = (req, res) => {
 
 // DELETE
 export const deleteRecipe = async (req, res) => {
-    const { id } = req.params;
+    const { user, accessToken, recipeId } = req.body;
     try{
-        const deletedRecipe = await Recipe.findByIdAndDelete(id);
+        const deletedRecipe = await Recipe.findByIdAndDelete(recipeId);
         // Update our user
-        const user = await User.findById(deletedRecipe._id);
+        // const user = await User.findById(deletedRecipe._id);
         res.json(deletedRecipe);
     }catch(e){
         console.error(e);
@@ -41,10 +38,10 @@ export const deleteRecipe = async (req, res) => {
 
 // UPDATE
 export const updateRecipe = async (req, res) => {
-    const { title, ingredients, directions } = testUpdateRecipe;
-    const { id } = req.params;
+    const { title, ingredients, directions, user, accessToken, recipeId } = req.body;
+    console.log(req.body);
     try {
-        const updatedRecipe = await Recipe.findByIdAndUpdate(id,{ title, ingredients, directions });
+        const updatedRecipe = await Recipe.findByIdAndUpdate(recipeId,{ title, ingredients, directions });
         res.json(updatedRecipe); // The update works, but updatedRecipe is actually the OLD recipe
     }catch(e){
         console.error(e)
@@ -79,7 +76,7 @@ export const showRecipe = async (req, res) => {
     // Get the Recipe based on it's id
     const { id } = req.params;
     try {
-        const recipe = await Recipe.findById(id).populate('author');
+        const recipe = await Recipe.findById(id).populate('author').populate('author').populate('comments');
         res.json(recipe);
     }catch(e){
         console.error(e);        
