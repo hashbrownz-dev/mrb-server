@@ -51,10 +51,10 @@ export const updateRecipe = async (req, res) => {
 // CREATE
 export const createRecipe = async (req, res) => {
     // in order for createRecipe to EVEN work, we'd need a user to be logged in.  I'm not sure where we'll get the user id from.  BUT for now, let's use a test constant.
-    const { title, ingredients, directions, user, accessToken } = req.body;
+    const { title, ingredients, directions, image, user, accessToken } = req.body;
     try{
         // create Recipe
-        const createdRecipe = new Recipe( { title, author:user._id, ingredients, directions });
+        const createdRecipe = new Recipe( { title, author:user._id, ingredients, directions, image });
         // attach recipe to User
         const userDoc = await User.findById(user._id);
         userDoc.recipes.push(createdRecipe._id);
