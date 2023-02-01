@@ -10,7 +10,7 @@ export const recipeSchema = new mongoose.Schema({
     likes : { type: Number, default: 0 },
     author: { type : Schema.Types.ObjectId, ref : 'user' },
     comments : [ { type : Schema.Types.ObjectId, ref : 'comment' } ],
-    image : Buffer
+    image : String
 }, {timestamps : true} )
 
 // CREATE A MODEL
