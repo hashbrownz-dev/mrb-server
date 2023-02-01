@@ -30,7 +30,7 @@ export const deleteRecipe = async (req, res) => {
         const deletedRecipe = await Recipe.findByIdAndDelete(recipeId);
         // Update our user
         // const user = await User.findById(deletedRecipe._id);
-        res.json(deletedRecipe);
+        res.status(200).json(deletedRecipe);
     }catch(e){
         console.error(e);
     }

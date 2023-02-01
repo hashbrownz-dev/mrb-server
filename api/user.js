@@ -22,7 +22,8 @@ export const registerUser = async (req, res) => {
             // Create a new User
             User.create({name, email, password : hash})
                 .then( (user) => {
-                    res.status(200).json(user);
+                    const accessToken = jwt.sign({ id : user._id }, process.env.API_SECRET, {expiresIn:'24h'})
+                    res.status(200).json({ user, accessToken});
                 })
                 .catch( (error) => {
                     res.status(401).json(error.message)
